@@ -15,17 +15,28 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
     }
 
-    body::before {
-      content: "";
+    .ad-container {
+      position: relative;
+      width: 728px;
+      height: 90px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .ad-container iframe {
+      border-radius: 10px;
+    }
+
+    .ad-container a {
       position: absolute;
       top: 0;
+      bottom: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 80%);
-      z-index: 1;
+      right: 0;
     }
 
     .container {
@@ -121,6 +132,12 @@
   </style>
 </head>
 <body>
+  <!-- Anuncio -->
+  <div class="ad-container">
+    <iframe src="https://publisher.linkvertise.com/cdn/ads/LV-728x90/index.html" frameborder="0" height="90" width="728"></iframe>
+    <a href="https://publisher.linkvertise.com/ac/1258891" target="_blank"></a>
+  </div>
+
   <div class="container">
     <i class="fa-solid fa-key fa-3x" style="margin-bottom: 20px; color: #ffd700;"></i>
     <h1>Genera tu Key</h1>
@@ -138,7 +155,7 @@
 
   <script>
     function generarKey() {
-      const texto = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        const texto = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
       const caracteres = "0123456789";
       let key = "KEY:[";
       for (let i = 0; i < 8; i++) {
@@ -199,5 +216,3 @@
   </script>
 </body>
 </html>
-
-
