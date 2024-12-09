@@ -6,188 +6,75 @@
   <title>Generar Key Automática</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #000;
-      color: #fff;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-
-    .ad-container {
-      position: relative;
-      width: 728px;
-      height: 90px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
-    }
-
-    .ad-container iframe {
-      border-radius: 10px;
-    }
-
-    .ad-container a {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
-
-    .container {
-      z-index: 2;
-      text-align: center;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      animation: fadeIn 1.5s ease;
-      max-width: 400px;
-      width: 100%;
-    }
-
-    h1 {
-      font-size: 3em;
-      margin-bottom: 10px;
-      background: linear-gradient(90deg, #ffd700, #ffffff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    p {
-      font-size: 1.2em;
-      margin-bottom: 30px;
-      color: #d3d3d3;
-    }
-
-    .button {
-      background: linear-gradient(90deg, #ff8a00, #ff2e71);
-      color: #fff;
-      border: none;
-      padding: 15px 40px;
-      font-size: 1.2em;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      margin: 10px 0;
-    }
-
-    .button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 8px 25px rgba(255, 56, 96, 0.5);
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .key {
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      padding: 10px 20px;
-      font-size: 1.5em;
-      color: #ffd700;
-      border-radius: 10px;
-      width: 100%;
-      margin: 20px 0;
-      text-align: center;
-      font-family: 'Courier New', Courier, monospace;
-      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-    }
-
-    .contador {
-      font-size: 1.5em;
-      margin-top: 20px;
-      color: #ffd700;
-    }
-
-    .reset-button {
-      background: linear-gradient(90deg, #ff0000, #ff4e00);
-      color: #fff;
-      padding: 15px 40px;
-      font-size: 1.2em;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      margin: 10px 0;
-    }
-
-    .reset-button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 8px 25px rgba(255, 56, 96, 0.5);
-    }
+    body { margin: 0; font-family: 'Poppins', sans-serif; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; flex-direction: column; height: 100vh; }
+    .container { text-align: center; padding: 40px; border-radius: 15px; backdrop-filter: blur(10px); max-width: 400px; width: 100%; }
+    h1 { font-size: 3em; margin-bottom: 10px; background: linear-gradient(90deg, #ffd700, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .button, .reset-button { background: linear-gradient(90deg, #ff8a00, #ff2e71); color: #fff; border: none; padding: 15px 40px; font-size: 1.2em; border-radius: 50px; cursor: pointer; transition: 0.3s; }
+    .button:hover, .reset-button:hover { transform: scale(1.1); box-shadow: 0 8px 25px rgba(255, 56, 96, 0.5); }
+    .key { background: rgba(255, 255, 255, 0.1); color: #ffd700; border-radius: 10px; padding: 10px 20px; font-size: 1.5em; text-align: center; font-family: 'Courier New', Courier, monospace; width: 100%; }
+    .contador { font-size: 1.5em; margin-top: 20px; color: #ffd700; }
   </style>
 </head>
 <body>
-  <!-- Anuncio -->
-  <div class="ad-container">
-    <iframe src="https://publisher.linkvertise.com/cdn/ads/LV-728x90/index.html" frameborder="0" height="90" width="728"></iframe>
-    <a href="https://publisher.linkvertise.com/ac/1258891" target="_blank"></a>
-  </div>
-
   <div class="container">
     <i class="fa-solid fa-key fa-3x" style="margin-bottom: 20px; color: #ffd700;"></i>
     <h1>Genera tu Key</h1>
-    <p>Tu Key se generará automáticamente cada 24 horas.</p>
-    
     <input type="text" class="key" id="keyOutput" value="Cargando..." disabled>
     <br>
-    
     <button class="button" onclick="copiarKey()">Copiar Key</button>
     <br>
     <button class="reset-button" onclick="resetearKey()">Resetear Key</button>
-    
     <div id="contador" class="contador"></div>
   </div>
 
   <script>
     function generarKey() {
-        const texto = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      const texto = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
       const caracteres = "0123456789";
       let key = "KEY:[";
-      for (let i = 0; i < 8; i++) {
-        key += texto.charAt(Math.floor(Math.random() * texto.length));
-      }
+      for (let i = 0; i < 8; i++) key += texto.charAt(Math.floor(Math.random() * texto.length));
       key += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
       key += "]";
       return key;
     }
 
     function copiarKey() {
-      const key = document.getElementById("keyOutput").value;
-      navigator.clipboard.writeText(key).then(() => {
-        alert("Key copiada al portapapeles.");
-      });
+      navigator.clipboard.writeText(document.getElementById("keyOutput").value).then(() => { alert("Key copiada."); });
     }
 
     function resetearKey() {
       const nuevaKey = generarKey();
       localStorage.setItem("keyGenerada", nuevaKey);
-      localStorage.setItem("ultimaGeneracion", new Date().getTime().toString());
+      localStorage.setItem("ultimaGeneracion", Date.now().toString());
       document.getElementById("keyOutput").value = nuevaKey;
       document.getElementById("contador").innerHTML = "";
     }
 
-    function actualizarContador() {
-      const ahora = new Date().getTime();
-      const ultimaGeneracion = localStorage.getItem("ultimaGeneracion");
+    function verificarKey() {
+      const storedLLave = localStorage.getItem("LLAVE_81726hqhd[]");
 
+      if (!storedLLave) {
+        window.location.href = "https://luatt11.github.io/Inivitacion/";
+      } else {
+        const storedKey = localStorage.getItem("keyGenerada");
+        if (!storedKey) {
+          const nuevaKey = generarKey();
+          localStorage.setItem("keyGenerada", nuevaKey);
+          localStorage.setItem("ultimaGeneracion", Date.now().toString());
+          document.getElementById("keyOutput").value = nuevaKey;
+        } else {
+          const nuevaKey = generarKey();
+          localStorage.setItem("keyGenerada", nuevaKey);
+          localStorage.setItem("ultimaGeneracion", Date.now().toString());
+        }
+      }
+    }
+
+    function actualizarContador() {
+      const ahora = Date.now();
+      const ultimaGeneracion = localStorage.getItem("ultimaGeneracion");
       if (ultimaGeneracion) {
         const tiempoTranscurrido = ahora - parseInt(ultimaGeneracion);
-        
         if (tiempoTranscurrido >= 86400000) {
           const nuevaKey = generarKey();
           localStorage.setItem("keyGenerada", nuevaKey);
@@ -195,13 +82,8 @@
           document.getElementById("keyOutput").value = nuevaKey;
         } else {
           document.getElementById("keyOutput").value = localStorage.getItem("keyGenerada");
-
           const tiempoRestante = 86400000 - tiempoTranscurrido;
-          const horas = Math.floor(tiempoRestante / (1000 * 60 * 60));
-          const minutos = Math.floor((tiempoRestante % (1000 * 60 * 60)) / (1000 * 60));
-          const segundos = Math.floor((tiempoRestante % (1000 * 60)) / 1000);
-
-          document.getElementById("contador").innerHTML = `Tiempo restante para generar una nueva key: ${horas}h ${minutos}m ${segundos}s`;
+          document.getElementById("contador").innerHTML = `Tiempo restante: ${Math.floor(tiempoRestante / (1000 * 60 * 60))}h ${Math.floor((tiempoRestante % (1000 * 60 * 60)) / (1000 * 60))}m`;
         }
       } else {
         const nuevaKey = generarKey();
@@ -212,6 +94,7 @@
     }
 
     setInterval(actualizarContador, 1000);
+    verificarKey();
     actualizarContador();
   </script>
 </body>
