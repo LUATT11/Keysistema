@@ -102,30 +102,28 @@
     function verificarReinicio() {
       const pasosCompletos = JSON.parse(localStorage.getItem('pasosCompletos')) || [false, false, false];
       const todosCompletos = pasosCompletos.every(paso => paso === true);
-
+      const lastGenerated = localStorage.getItem("lastGenerated");
+      const now = new Date();
+      
       if (!todosCompletos) {
-        eliminarKeys();
-      }
+        document.getElementById("timeRemaining").textContent = "Pasos incompletos.";
+      } else if (lastGenerated) {
+        const lastDate = new Date(lastGenerated);
+        const diff = (now - lastDate) / 1000;
+        const timeLeft = 86400 - diff;
 
-      if (todosCompletos) {
-        const lastGenerated = localStorage.getItem("lastGenerated");
-        if (lastGenerated) {
-          const lastDate = new Date(lastGenerated);
-          const now = new Date();
-          const diff = (now - lastDate) / 1000;
-          const timeLeft = 86400 - diff;
-          if (timeLeft <= 0) {
-            localStorage.setItem("pasosCompletos", JSON.stringify([false, false, false]));
-            mostrarTiempoRestante(0);
-          } else {
-            mostrarTiempoRestante(timeLeft);
-          }
-        } else {
+        if (timeLeft <= 0) {
+          // Eliminar solo una vez después de 24 horas
+          localStorage.setItem("lastGenerated", new Date().toISOString());
+          eliminarKeys();
           mostrarTiempoRestante(86400);
+        } else {
+          mostrarTiempoRestante(timeLeft);
         }
       } else {
-        document.getElementById("timeRemaining").textContent = "Pasos incompletos.";
+        mostrarTiempoRestante(86400);
       }
+      
       verificarPasos();
     }
 
