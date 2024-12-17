@@ -15,18 +15,7 @@
     .complete.disabled { background: #ccc; cursor: not-allowed; }
     .reset { background: #dc3545; color: #fff; margin-top: 20px; }
     .link a { text-decoration: none; color: #007bff; font-size: 18px; }
-    .completed-container { background: #28a745; padding: 30px 20px; border-radius: 10px; display: none; animation: fadeIn 1s ease-in-out; transform: scale(0.95); }
-    .completed-container h2 { font-size: 24px; font-weight: bold; color: #fff; text-transform: uppercase; animation: bounce 1s ease-in-out infinite; }
-    
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: scale(0.8); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
+    .completed-container { background: #28a745; padding: 30px 20px; border-radius: 10px; display: none; }
   </style>
 </head>
 <body>
@@ -55,65 +44,46 @@
 
   <script>
     let pasosCompletos = JSON.parse(localStorage.getItem('pasosCompletos')) || [false, false, false];
-    let timer;
 
     function actualizarEstadoUI() {
-      if (pasosCompletos[0] && !pasosCompletos[1]) {
-        document.getElementById('step1').classList.add('completed');
-        document.getElementById('step1').style.display = 'none';
-        timer = setTimeout(() => {
-          document.getElementById('step2').style.display = 'block';
-        }, 5000);
-      } else if (pasosCompletos[1] && !pasosCompletos[2]) {
-        document.getElementById('step2').classList.add('completed');
-        document.getElementById('step2').style.display = 'none';
-        timer = setTimeout(() => {
-          document.getElementById('step3').style.display = 'block';
-        }, 5000);
-      } else if (pasosCompletos[2]) {
-        document.getElementById('step3').classList.add('completed');
-        document.getElementById('step3').style.display = 'none';
-        document.querySelector('.link').style.display = 'block';
-      } else if (!pasosCompletos[0]) {
+      if (!pasosCompletos[0]) {
         document.getElementById('step1').style.display = 'block';
         document.getElementById('step2').style.display = 'none';
         document.getElementById('step3').style.display = 'none';
       }
-
-      pasosCompletos.forEach((completado, index) => {
-        const stepDiv = document.getElementById(`step${index + 1}`);
-        const button = stepDiv.querySelector('button');
-        if (completado) {
-          stepDiv.classList.add('completed');
-          button.textContent = 'Completado';
-          button.classList.add('disabled');
-          button.disabled = true;
-        } else {
-          stepDiv.classList.remove('completed');
-          button.textContent = 'Completar';
-          button.classList.remove('disabled');
-          button.disabled = false;
-        }
-      });
-
-      if (pasosCompletos.every(completado => completado)) {
-        document.getElementById('stepsContainer').style.display = 'none';
+      else if (pasosCompletos[0] && !pasosCompletos[1]) {
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
+        document.getElementById('step3').style.display = 'none';
+      }
+      else if (pasosCompletos[1] && !pasosCompletos[2]) {
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('step3').style.display = 'block';
+      }
+      else if (pasosCompletos[2]) {
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('step3').style.display = 'none';
         document.getElementById('completedContainer').style.display = 'block';
+        document.querySelector('.link').style.display = 'block';
       }
     }
 
     function completarPaso(paso, url) {
       window.location.href = url;
+      
       pasosCompletos[paso - 1] = true;
       localStorage.setItem('pasosCompletos', JSON.stringify(pasosCompletos));
-      clearTimeout(timer);
-      actualizarEstadoUI();
+
+      setTimeout(() => {
+        actualizarEstadoUI();
+      }, paso === 3 ? 20000 : 40000);
     }
 
     function reiniciarPasos() {
       pasosCompletos = [false, false, false];
       localStorage.setItem('pasosCompletos', JSON.stringify(pasosCompletos));
-      clearTimeout(timer);
       actualizarEstadoUI();
     }
 
