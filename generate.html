@@ -125,12 +125,14 @@
       });
     }
 
-    function reiniciarTiempo() {
-      localStorage.setItem('pasosCompletos', JSON.stringify([false, false, false]));
-      localStorage.removeItem("lastGenerated");
-      eliminarKeys();
-      window.location.href = "index.html"; // Redirige al archivo index.html
-    }
+function reiniciarTiempo() {
+  localStorage.setItem('Paso1', 'false');
+  localStorage.setItem('Paso2', 'false');
+  localStorage.setItem('Paso3', 'false');
+  localStorage.removeItem("lastGenerated");
+  eliminarKeys();
+  window.location.href = "index.html"; // Redirige al archivo index.html
+}
 
     openDB();
     verificarPasos();
