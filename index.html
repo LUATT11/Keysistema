@@ -8,6 +8,7 @@
     body { font-family: Arial, sans-serif; background: #000; color: #fff; text-align: center; padding: 50px; }
     button { padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #28a745; color: white; border: none; border-radius: 5px; margin: 20px; }
     button:disabled { background-color: #ccc; }
+    #reiniciarBtn { background-color: #dc3545; }
   </style>
 </head>
 <body>
@@ -17,8 +18,10 @@
   <button id="btnPaso2" onclick="Web(2, 'https://link-center.net/1258891/completa-paso-1')" disabled>Ir al Paso 2</button>
   <button id="btnPaso3" onclick="Web(3, 'https://link-hub.net/1258891/paso-final-y-gracias')" disabled>Ir al Paso 3</button>
 
+  <button id="reiniciarBtn" onclick="reiniciarPasos()">Reiniciar Todos los Pasos</button>
+
   <script>
-  	function Web(paso, url) {
+    function Web(paso, url) {
       if (paso === 1) {
         localStorage.setItem('Verificacion1', 'true');
       }
@@ -50,7 +53,26 @@
         if (localStorage.getItem('Paso3') === 'true') {
           document.getElementById('btnPaso3').style.display = 'none';
         }
-      }, 1);
+
+        if (localStorage.getItem('Paso1') === 'true' && localStorage.getItem('Paso2') === 'true' && localStorage.getItem('Paso3') === 'true') {
+          window.location.href = "generate.html"; // Redirige a generate.html si todos los pasos están completos
+        }
+      }, 1); // Verifica cada 1 milisegundo
+    }
+
+    function reiniciarPasos() {
+      localStorage.removeItem('Verificacion1');
+      localStorage.removeItem('Verificacion2');
+      localStorage.removeItem('Verificacion3');
+      localStorage.removeItem('Paso1');
+      localStorage.removeItem('Paso2');
+      localStorage.removeItem('Paso3');
+      
+      document.getElementById('btnPaso1').style.display = 'inline-block';
+      document.getElementById('btnPaso2').style.display = 'inline-block';
+      document.getElementById('btnPaso3').style.display = 'inline-block';
+      document.getElementById('btnPaso2').disabled = true;
+      document.getElementById('btnPaso3').disabled = true;
     }
 
     verificarEstado();
