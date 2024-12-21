@@ -81,20 +81,26 @@
       };
     };
 
-    function verificarPasos() {
-      const pasosCompletos = JSON.parse(localStorage.getItem('pasosCompletos')) || [false, false, false];
-      const todosCompletos = pasosCompletos.every(paso => paso === true);
+    function iniciarVerificacionAutomatica() {
+    setInterval(() => {
+        const pasos = {
+            Paso1: JSON.parse(localStorage.getItem('Paso1')) || false,
+            Paso2: JSON.parse(localStorage.getItem('Paso2')) || false,
+            Paso3: JSON.parse(localStorage.getItem('Paso3')) || false
+        };
 
-      if (!todosCompletos) {
-        alert("Los pasos están incompletos. Redirigiendo...");
-        window.location.href = "index.html"; // Redirige al archivo index.html si los pasos están incompletos
-      } else {
-        document.getElementById('status').textContent = "Listo para generar key.";
-        const button = document.getElementById('generateButton');
-        button.classList.remove('disabled');
-        button.disabled = false;
-      }
-    }
+        const todosCompletos = pasos.Paso1 && pasos.Paso2 && pasos.Paso3;
+
+        if (todosCompletos) {
+            document.getElementById('status').textContent = "Listo para generar key.";
+            const button = document.getElementById('generateButton');
+            button.classList.remove('disabled');
+            button.disabled = false;
+        } else {
+            window.location.href = "index.html";
+        }
+    }, 1);
+}
 
     function generarKey() {
       const key = "KEY:[" + generarCadenaAleatoria() + "]";
