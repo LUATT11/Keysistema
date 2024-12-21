@@ -21,7 +21,8 @@
     <div id="timeRemaining" style="font-size: 1.2em; margin-top: 10px;"></div>
     <div class="key-output" id="keyOutput">---</div>
     <button id="generateButton" class="disabled" onclick="generarKey()" style="display:none;" disabled>Generar</button>
-    <button id="copyButton" onclick="copiarKey()" style="display:none;">Copy</button>
+    <button id="copyButton" onclick="copiarKey()" style="display:none;">Copiar</button>
+    <button id="resetTimeButton" onclick="reiniciarTiempo()">Reiniciar Tiempo</button>
   </div>
 
   <script>
@@ -40,7 +41,7 @@
       request.onsuccess = () => {
         db = request.result;
         verificarKey();
-        verificarReinicio();
+        verificarPasos();
       };
       request.onerror = () => {
         console.error("Error al abrir DB");
@@ -59,25 +60,6 @@
       const store = transaction.objectStore(storeName);
       store.clear();
       document.getElementById("keyOutput").textContent = "---";
-    };
-
-    const recuperarKey = () => {
-      const transaction = db.transaction([storeName], "readonly");
-      const store = transaction.objectStore(storeName);
-      const request = store.getAll();
-      request.onsuccess = () => {
-        if (request.result.length > 0) {
-          document.getElementById("keyOutput").textContent = request.result[request.result.length - 1].key;
-          document.getElementById("copyButton").style.display = "inline-block";
-          document.getElementById("generateButton").style.display = "none";
-        } else {
-          document.getElementById("generateButton").style.display = "inline-block";
-          document.getElementById("copyButton").style.display = "none";
-        }
-      };
-      request.onerror = () => {
-        console.error("Error al recuperar key");
-      };
     };
 
     const verificarKey = () => {
@@ -99,56 +81,18 @@
       };
     };
 
-    function verificarReinicio() {
-      const pasosCompletos = JSON.parse(localStorage.getItem('pasosCompletos')) || [false, false, false];
-      const todosCompletos = pasosCompletos.every(paso => paso === true);
-      const lastGenerated = localStorage.getItem("lastGenerated");
-      const now = new Date();
-      
-      if (!todosCompletos) {
-        document.getElementById("timeRemaining").textContent = "Pasos incompletos.";
-      } else if (lastGenerated) {
-        const lastDate = new Date(lastGenerated);
-        const diff = (now - lastDate) / 1000;
-        const timeLeft = 86400 - diff;
-
-        if (timeLeft <= 0) {
-          // Eliminar solo una vez después de 24 horas
-          localStorage.setItem("lastGenerated", new Date().toISOString());
-          eliminarKeys();
-          mostrarTiempoRestante(86400);
-        } else {
-          mostrarTiempoRestante(timeLeft);
-        }
-      } else {
-        mostrarTiempoRestante(86400);
-      }
-      
-      verificarPasos();
-    }
-
-    function mostrarTiempoRestante(timeLeft) {
-      if (timeLeft <= 0) {
-        document.getElementById('timeRemaining').textContent = "Reiniciado.";
-      } else {
-        const hours = Math.floor(timeLeft / 3600);
-        const minutes = Math.floor((timeLeft % 3600) / 60);
-        const seconds = Math.floor(timeLeft % 60);
-        document.getElementById('timeRemaining').textContent = `Faltan ${hours}:${minutes}:${seconds}`;
-      }
-    }
-
     function verificarPasos() {
       const pasosCompletos = JSON.parse(localStorage.getItem('pasosCompletos')) || [false, false, false];
       const todosCompletos = pasosCompletos.every(paso => paso === true);
 
-      if (todosCompletos) {
+      if (!todosCompletos) {
+        alert("Los pasos están incompletos. Redirigiendo...");
+        window.location.href = "index.html"; // Redirige al archivo index.html si los pasos están incompletos
+      } else {
         document.getElementById('status').textContent = "Listo para generar key.";
         const button = document.getElementById('generateButton');
         button.classList.remove('disabled');
         button.disabled = false;
-      } else {
-        document.getElementById('status').textContent = "Completa los pasos.";
       }
     }
 
@@ -179,15 +123,16 @@
       });
     }
 
-    function actualizarTiempoRestante() {
-      setInterval(() => {
-        verificarReinicio();
-      }, 1000);
+    function reiniciarTiempo() {
+      localStorage.setItem('pasosCompletos', JSON.stringify([false, false, false]));
+      localStorage.removeItem("lastGenerated");
+      eliminarKeys();
+      alert("El tiempo y los pasos han sido reiniciados.");
+      window.location.href = "index.html"; // Redirige al archivo index.html
     }
 
     openDB();
     verificarPasos();
-    actualizarTiempoRestante();
   </script>
 </body>
-</html>
+</html> 
