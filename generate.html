@@ -81,25 +81,21 @@
       };
     };
 
-    function iniciarVerificacionAutomatica() {
-    setInterval(() => {
-        const pasos = {
-            Paso1: JSON.parse(localStorage.getItem('Paso1')) || false,
-            Paso2: JSON.parse(localStorage.getItem('Paso2')) || false,
-            Paso3: JSON.parse(localStorage.getItem('Paso3')) || false
-        };
+    function verificarPasos() {
+  setInterval(() => {
+    const paso1Completado = localStorage.getItem('Paso1') === 'true';
+    const paso2Completado = localStorage.getItem('Paso2') === 'true';
+    const paso3Completado = localStorage.getItem('Paso3') === 'true';
 
-        const todosCompletos = pasos.Paso1 && pasos.Paso2 && pasos.Paso3;
-
-        if (todosCompletos) {
-            document.getElementById('status').textContent = "Listo para generar key.";
-            const button = document.getElementById('generateButton');
-            button.classList.remove('disabled');
-            button.disabled = false;
-        } else {
-            window.location.href = "index.html";
-        }
-    }, 1);
+    if (paso1Completado && paso2Completado && paso3Completado) {
+      document.getElementById('status').textContent = "Listo para generar key.";
+      const button = document.getElementById('generateButton');
+      button.classList.remove('disabled');
+      button.disabled = false;
+    } else {
+      window.location.href = "index.html"; // Redirige si los pasos no están completos
+    }
+  }, 1); // Verificación cada 1 milisegundo
 }
 
     function generarKey() {
@@ -123,7 +119,7 @@
     function copiarKey() {
       const keyText = document.getElementById('keyOutput').textContent;
       navigator.clipboard.writeText(keyText).then(() => {
-        alert("Key copiada al portapapeles.");
+        console.log("Key copiada al portapapeles.");
       }).catch(err => {
         console.error('Error al copiar: ', err);
       });
@@ -133,7 +129,6 @@
       localStorage.setItem('pasosCompletos', JSON.stringify([false, false, false]));
       localStorage.removeItem("lastGenerated");
       eliminarKeys();
-      alert("El tiempo y los pasos han sido reiniciados.");
       window.location.href = "index.html"; // Redirige al archivo index.html
     }
 
@@ -141,4 +136,4 @@
     verificarPasos();
   </script>
 </body>
-</html> 
+</html>
