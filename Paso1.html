@@ -16,6 +16,7 @@
   <script>
     setInterval(function() {
       if (localStorage.getItem("Verificacion1") === "true") {
+       localStorage.setItem("Paso1", "true");
         window.location.href = "index.html";
       }
     }, 1);
