@@ -3,91 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pasos para Completar</title>
+  <title>Redirigir a los Pasos</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #000; color: #fff; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; height: 100vh; }
-    .container { background: #333; padding: 20px; border-radius: 10px; width: 100%; max-width: 400px; text-align: center; }
-    h1 { color: #fff; }
-    .step { margin: 20px 0; padding: 15px; background: #444; border: 1px solid #555; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
-    .step.completed { background: #28a745; border-color: #218838; }
-    button { padding: 10px 20px; font-size: 16px; cursor: pointer; border: none; border-radius: 5px; }
-    .complete { background: #28a745; color: #fff; }
-    .complete.disabled { background: #ccc; cursor: not-allowed; }
-    .reset { background: #dc3545; color: #fff; margin-top: 20px; }
-    .link a { text-decoration: none; color: #007bff; font-size: 18px; }
-    .completed-container { background: #28a745; padding: 30px 20px; border-radius: 10px; display: none; }
+    body { font-family: Arial, sans-serif; background: #000; color: #fff; text-align: center; padding: 50px; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #28a745; color: white; border: none; border-radius: 5px; margin: 20px; }
+    button:disabled { background-color: #ccc; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Pasos para Completar</h1>
-    <div id="stepsContainer">
-      <div class="step" id="step1">
-        <span>Paso 1</span>
-        <button class="complete" id="btnStep1" onclick="completarPaso(1, 'https://direct-link.net/1258891/key-dbu')">Completar</button>
-      </div>
-      <div class="step" id="step2" style="display: none;">
-        <span>Paso 2</span>
-        <button class="complete" id="btnStep2" onclick="completarPaso(2, 'https://link-center.net/1258891/completa-paso-1')">Completar</button>
-      </div>
-      <div class="step" id="step3" style="display: none;">
-        <span>Paso 3</span>
-        <button class="complete" id="btnStep3" onclick="completarPaso(3, 'https://link-hub.net/1258891/paso-final-y-gracias')">Completar</button>
-      </div>
-    </div>
-    <div class="completed-container" id="completedContainer">
-      <h2>Pasos Completos</h2>
-    </div>
-    <div class="link" style="display: none;"><a href="generate.html">Ir a Generar Key</a></div>
-    <div class="link"><button class="reset" onclick="reiniciarPasos()">Reiniciar Pasos</button></div>
-  </div>
+
+  <h1>Selecciona un paso para continuar</h1>
+  <button id="btnPaso1" onclick="Web(1, 'https://direct-link.net/1258891/key-dbu')">Ir al Paso 1</button>
+  <button id="btnPaso2" onclick="Web(2, 'https://link-center.net/1258891/completa-paso-1')" disabled>Ir al Paso 2</button>
+  <button id="btnPaso3" onclick="Web(3, 'https://link-hub.net/1258891/paso-final-y-gracias')" disabled>Ir al Paso 3</button>
 
   <script>
-    let pasosCompletos = JSON.parse(localStorage.getItem('pasosCompletos')) || [false, false, false];
-
-    function actualizarEstadoUI() {
-      if (!pasosCompletos[0]) {
-        document.getElementById('step1').style.display = 'block';
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step3').style.display = 'none';
+  	function Web(paso, url) {
+      if (paso === 1) {
+        localStorage.setItem('Verificacion1', 'true');
       }
-      else if (pasosCompletos[0] && !pasosCompletos[1]) {
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
-        document.getElementById('step3').style.display = 'none';
+      if (paso === 2) {
+        localStorage.setItem('Verificacion2', 'true');
       }
-      else if (pasosCompletos[1] && !pasosCompletos[2]) {
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step3').style.display = 'block';
+      if (paso === 3) {
+        localStorage.setItem('Verificacion3', 'true');
       }
-      else if (pasosCompletos[2]) {
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step3').style.display = 'none';
-        document.getElementById('completedContainer').style.display = 'block';
-        document.querySelector('.link').style.display = 'block';
-      }
-    }
-
-    function completarPaso(paso, url) {
       window.location.href = url;
-      
-      pasosCompletos[paso - 1] = true;
-      localStorage.setItem('pasosCompletos', JSON.stringify(pasosCompletos));
-
-      setTimeout(() => {
-        actualizarEstadoUI();
-      }, paso === 3 ? 20000 : 40000);
     }
 
-    function reiniciarPasos() {
-      pasosCompletos = [false, false, false];
-      localStorage.setItem('pasosCompletos', JSON.stringify(pasosCompletos));
-      actualizarEstadoUI();
+    function verificarEstado() {
+      setInterval(() => {
+        if (localStorage.getItem('Paso1') === 'true') {
+          document.getElementById('btnPaso2').disabled = false;
+          document.getElementById('btnPaso1').style.display = 'none';
+        } else {
+          document.getElementById('btnPaso1').style.display = 'inline-block';
+        }
+
+        if (localStorage.getItem('Paso2') === 'true') {
+          document.getElementById('btnPaso3').disabled = false;
+          document.getElementById('btnPaso2').style.display = 'none';
+        } else {
+          document.getElementById('btnPaso2').style.display = 'inline-block';
+        }
+
+        if (localStorage.getItem('Paso3') === 'true') {
+          document.getElementById('btnPaso3').style.display = 'none';
+        }
+      }, 1);
     }
 
-    actualizarEstadoUI();
+    verificarEstado();
   </script>
+
 </body>
 </html>
