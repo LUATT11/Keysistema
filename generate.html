@@ -5,13 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Generar Key</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; flex-direction: column; }
-    .container { text-align: center; max-width: 400px; width: 100%; background: #444; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); position: relative; }
-    h1 { font-size: 2em; margin-bottom: 20px; }
-    .key-output { font-size: 1.5em; background: #555; padding: 10px; margin: 20px 0; color: #ffd700; border-radius: 5px; position: relative; }
-    button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #28a745; border: none; color: #fff; border-radius: 5px; }
-    button.disabled { background: #555; cursor: not-allowed; }
-    #copyButton { position: absolute; top: 10px; right: 10px; background: transparent; border: none; color: #ffd700; font-size: 14px; cursor: pointer; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+    .container {
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      background: #444;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    .key-output {
+      font-size: 1.5em;
+      background: #555;
+      padding: 10px;
+      margin: 20px 0;
+      color: #ffd700;
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden; /* Evita desbordamiento */
+      white-space: nowrap; /* Evita que el texto se envuelva */
+      text-overflow: ellipsis; /* Muestra "..." si el texto es demasiado largo */
+      max-width: 100%; /* Limita el ancho */
+      box-sizing: border-box; /* Incluye padding en el ancho */
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #28a745;
+      border: none;
+      color: #fff;
+      border-radius: 5px;
+    }
+    button.disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    #copyButton {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: #ffd700;
+      font-size: 14px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -82,21 +137,21 @@
     };
 
     function verificarPasos() {
-  setInterval(() => {
-    const paso1Completado = localStorage.getItem('Paso1') === 'true';
-    const paso2Completado = localStorage.getItem('Paso2') === 'true';
-    const paso3Completado = localStorage.getItem('Paso3') === 'true';
+      setInterval(() => {
+        const paso1Completado = localStorage.getItem('Paso1') === 'true';
+        const paso2Completado = localStorage.getItem('Paso2') === 'true';
+        const paso3Completado = localStorage.getItem('Paso3') === 'true';
 
-    if (paso1Completado && paso2Completado && paso3Completado) {
-      document.getElementById('status').textContent = "Listo para generar key.";
-      const button = document.getElementById('generateButton');
-      button.classList.remove('disabled');
-      button.disabled = false;
-    } else {
-      window.location.href = "index.html"; // Redirige si los pasos no están completos
+        if (paso1Completado && paso2Completado && paso3Completado) {
+          document.getElementById('status').textContent = "Listo para generar key.";
+          const button = document.getElementById('generateButton');
+          button.classList.remove('disabled');
+          button.disabled = false;
+        } else {
+          window.location.href = "index.html"; // Redirige si los pasos no están completos
+        }
+      }, 1); // Verificación cada 1 milisegundo
     }
-  }, 1); // Verificación cada 1 milisegundo
-}
 
     function generarKey() {
       const key = "KEY:[" + generarCadenaAleatoria() + "]";
@@ -125,14 +180,14 @@
       });
     }
 
-function reiniciarTiempo() {
-  localStorage.setItem('Paso1', 'false');
-  localStorage.setItem('Paso2', 'false');
-  localStorage.setItem('Paso3', 'false');
-  localStorage.removeItem("lastGenerated");
-  eliminarKeys();
-  window.location.href = "index.html"; // Redirige al archivo index.html
-}
+    function reiniciarTiempo() {
+      localStorage.setItem('Paso1', 'false');
+      localStorage.setItem('Paso2', 'false');
+      localStorage.setItem('Paso3', 'false');
+      localStorage.removeItem("lastGenerated");
+      eliminarKeys();
+      window.location.href = "index.html"; // Redirige al archivo index.html
+    }
 
     openDB();
     verificarPasos();
