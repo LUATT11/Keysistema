@@ -98,13 +98,7 @@
       }, 1);
     }
 
-    function generarKey() {
-      const key = "KEY:[" + generarCadenaAleatoria() + "]";
-      document.getElementById('keyOutput').textContent = key;
-      guardarKey(key);
-      document.getElementById("copyButton").style.display = "inline-block";
-      document.getElementById("generateButton").style.display = "none";
-    }
+   
 
     function generarCadenaAleatoria() {
     const minusc = 'abcdefghijklmnopqrstuvwxyz';
@@ -112,45 +106,42 @@
     const nums = '0123456789';
     const caracteres = minusc + mayusc + nums;
 
-    const minuscAleatorias = obtenerCaracteresAleatorios(minusc, 3);
-    const mayuscAleatorias = obtenerCaracteresAleatorios(mayusc, 5);
-    const numerosSeis = insertarCaracteresAleatorios('6', 3);
-    const letrasF = insertarCaracteresAleatorios('F', 4);
+    const longitudTotal = 65;
 
-    const longitudRelleno = 65 - (minuscAleatorias.length + mayuscAleatorias.length + numerosSeis.length + letrasF.length);
-    const relleno = obtenerCaracteresAleatorios(caracteres, longitudRelleno);
+   
+    let claveArray = new Array(longitudTotal).fill('');
 
-    const claveBase = minuscAleatorias + mayuscAleatorias + numerosSeis + letrasF + relleno;
-    const claveFinal = mezclarCaracteres(claveBase);
+  
+    const posicionesF = [10, 25, 40, 55];
+    const posiciones6 = [15, 30, 45]; 
 
-    return claveFinal;
+    // Insertar "F" en posiciones estratégicas
+    posicionesF.forEach(pos => {
+        claveArray[pos] = 'F';
+    });
+
+    // Insertar "6" en posiciones estratégicas
+    posiciones6.forEach(pos => {
+        claveArray[pos] = '6';
+    });
+
+    // Rellenar el resto de las posiciones con caracteres aleatorios
+    for (let i = 0; i < claveArray.length; i++) {
+        if (claveArray[i] === '') {
+            const index = Math.floor(Math.random() * caracteres.length);
+            claveArray[i] = caracteres[index];
+        }
+    }
+
+    return claveArray.join('');
 }
 
-function obtenerCaracteresAleatorios(caracteres, cantidad) {
-    let result = '';
-    for (let i = 0; i < cantidad; i++) {
-        const index = Math.floor(Math.random() * caracteres.length);
-        result += caracteres[index];
-    }
-    return result;
-}
-
-function insertarCaracteresAleatorios(caracter, cantidad) {
-    let result = '';
-    for (let i = 0; i < cantidad; i++) {
-        const posicion = Math.floor(Math.random() * 62); // Máximo índice
-        result += caracter;
-    }
-    return result;
-}
-
-function mezclarCaracteres(cadena) {
-    const array = cadena.split('');
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array.join('');
+function generarKey() {
+    const key = "KEY:[" + generarCadenaAleatoria() + "]";
+    document.getElementById('keyOutput').textContent = key;
+    guardarKey(key);
+    document.getElementById("copyButton").style.display = "inline-block";
+    document.getElementById("generateButton").style.display = "none";
 }
 
     function copiarKey() {
