@@ -107,29 +107,51 @@
     }
 
     function generarCadenaAleatoria() {
-      const minusc = 'abcdefghijklmnopqrstuvwxyz';
-      const mayusc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      const nums = '0123456789';
-      const caracteres = minusc + mayusc + nums;
-      
-      let result = '';
-      result += 'FFFF';
-      result += obtenerCaracteresAleatorios(minusc, 3);
-      result += obtenerCaracteresAleatorios(mayusc, 5);
-      result += '666';
-      result += obtenerCaracteresAleatorios(caracteres, 65 - result.length);
-      
-      return result;
-    }
+    const minusc = 'abcdefghijklmnopqrstuvwxyz';
+    const mayusc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const nums = '0123456789';
+    const caracteres = minusc + mayusc + nums;
 
-    function obtenerCaracteresAleatorios(caracteres, cantidad) {
-      let result = '';
-      for (let i = 0; i < cantidad; i++) {
+    const minuscAleatorias = obtenerCaracteresAleatorios(minusc, 3);
+    const mayuscAleatorias = obtenerCaracteresAleatorios(mayusc, 5);
+    const numerosSeis = insertarCaracteresAleatorios('6', 3);
+    const letrasF = insertarCaracteresAleatorios('F', 4);
+
+    const longitudRelleno = 65 - (minuscAleatorias.length + mayuscAleatorias.length + numerosSeis.length + letrasF.length);
+    const relleno = obtenerCaracteresAleatorios(caracteres, longitudRelleno);
+
+    const claveBase = minuscAleatorias + mayuscAleatorias + numerosSeis + letrasF + relleno;
+    const claveFinal = mezclarCaracteres(claveBase);
+
+    return claveFinal;
+}
+
+function obtenerCaracteresAleatorios(caracteres, cantidad) {
+    let result = '';
+    for (let i = 0; i < cantidad; i++) {
         const index = Math.floor(Math.random() * caracteres.length);
         result += caracteres[index];
-      }
-      return result;
     }
+    return result;
+}
+
+function insertarCaracteresAleatorios(caracter, cantidad) {
+    let result = '';
+    for (let i = 0; i < cantidad; i++) {
+        const posicion = Math.floor(Math.random() * 62); // Máximo índice
+        result += caracter;
+    }
+    return result;
+}
+
+function mezclarCaracteres(cadena) {
+    const array = cadena.split('');
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array.join('');
+}
 
     function copiarKey() {
       const keyText = document.getElementById('keyOutput').textContent;
