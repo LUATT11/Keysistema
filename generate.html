@@ -99,7 +99,7 @@
 }
 
     function generarKey() {
-  const key = "KEY:" + generarCadenaAleatoria();  // Siempre con el formato KEY:
+  const key = "FREE=[" + generarCadenaAleatoria() + "]";  // Ahora usa "FREE=["
   document.getElementById('keyOutput').textContent = key;
   guardarKey(key);
   document.getElementById("copyButton").style.display = "inline-block";
