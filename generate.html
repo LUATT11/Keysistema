@@ -82,67 +82,39 @@
     };
 
     function verificarPasos() {
-      setInterval(() => {
-        const paso1Completado = localStorage.getItem('Paso1') === 'true';
-        const paso2Completado = localStorage.getItem('Paso2') === 'true';
-        const paso3Completado = localStorage.getItem('Paso3') === 'true';
+  setInterval(() => {
+    const paso1Completado = localStorage.getItem('Paso1') === 'true';
+    const paso2Completado = localStorage.getItem('Paso2') === 'true';
+    const paso3Completado = localStorage.getItem('Paso3') === 'true';
 
-        if (paso1Completado && paso2Completado && paso3Completado) {
-          document.getElementById('status').textContent = "Listo para generar key.";
-          const button = document.getElementById('generateButton');
-          button.classList.remove('disabled');
-          button.disabled = false;
-        } else {
-          window.location.href = "index.html";
-        }
-      }, 1);
+    if (paso1Completado && paso2Completado && paso3Completado) {
+      document.getElementById('status').textContent = "Listo para generar key.";
+      const button = document.getElementById('generateButton');
+      button.classList.remove('disabled');
+      button.disabled = false;
+    } else {
+      window.location.href = "index.html"; // Redirige si los pasos no están completos
     }
+  }, 1); // Verificación cada 1 milisegundo
+}
 
-   
+    function generarKey() {
+      const key = "KEY:[" + generarCadenaAleatoria() + "]";
+      document.getElementById('keyOutput').textContent = key;
+      guardarKey(key);
+      document.getElementById("copyButton").style.display = "inline-block";
+      document.getElementById("generateButton").style.display = "none";
+    }
 
     function generarCadenaAleatoria() {
-    const minusc = 'abcdefghijklmnopqrstuvwxyz';
-    const mayusc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const nums = '0123456789';
-    const caracteres = minusc + mayusc + nums;
-
-    const longitudTotal = 65;
-
-   
-    let claveArray = new Array(longitudTotal).fill('');
-
-  
-    const posicionesF = [10, 25, 40, 55];
-    const posiciones6 = [15, 30, 45]; 
-
-    // Insertar "F" en posiciones estratégicas
-    posicionesF.forEach(pos => {
-        claveArray[pos] = 'F';
-    });
-
-    // Insertar "6" en posiciones estratégicas
-    posiciones6.forEach(pos => {
-        claveArray[pos] = '6';
-    });
-
-    // Rellenar el resto de las posiciones con caracteres aleatorios
-    for (let i = 0; i < claveArray.length; i++) {
-        if (claveArray[i] === '') {
-            const index = Math.floor(Math.random() * caracteres.length);
-            claveArray[i] = caracteres[index];
-        }
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < 64; i++) {
+        const index = Math.floor(Math.random() * chars.length);
+        result += chars[index];
+      }
+      return result;
     }
-
-    return claveArray.join('');
-}
-
-function generarKey() {
-    const key = "KEY:[" + generarCadenaAleatoria() + "]";
-    document.getElementById('keyOutput').textContent = key;
-    guardarKey(key);
-    document.getElementById("copyButton").style.display = "inline-block";
-    document.getElementById("generateButton").style.display = "none";
-}
 
     function copiarKey() {
       const keyText = document.getElementById('keyOutput').textContent;
@@ -153,14 +125,14 @@ function generarKey() {
       });
     }
 
-    function reiniciarTiempo() {
-      localStorage.setItem('Paso1', 'false');
-      localStorage.setItem('Paso2', 'false');
-      localStorage.setItem('Paso3', 'false');
-      localStorage.removeItem("lastGenerated");
-      eliminarKeys();
-      window.location.href = "index.html";
-    }
+function reiniciarTiempo() {
+  localStorage.setItem('Paso1', 'false');
+  localStorage.setItem('Paso2', 'false');
+  localStorage.setItem('Paso3', 'false');
+  localStorage.removeItem("lastGenerated");
+  eliminarKeys();
+  window.location.href = "index.html"; // Redirige al archivo index.html
+}
 
     openDB();
     verificarPasos();
