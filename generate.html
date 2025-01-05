@@ -8,7 +8,7 @@
     body { font-family: Arial, sans-serif; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; flex-direction: column; }
     .container { text-align: center; max-width: 400px; width: 100%; background: #444; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); position: relative; }
     h1 { font-size: 2em; margin-bottom: 20px; }
-    .key-output { font-size: 1.5em; background: #555; padding: 10px; margin: 20px 0; color: #ffd700; border-radius: 5px; position: relative; word-wrap: break-word; white-space: normal; overflow-wrap: break-word; }
+    .key-output { font-size: 1.5em; background: #555; padding: 10px; margin: 20px 0; color: #ffd700; border-radius: 5px; position: relative; }
     button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #28a745; border: none; color: #fff; border-radius: 5px; }
     button.disabled { background: #555; cursor: not-allowed; }
     #copyButton { position: absolute; top: 10px; right: 10px; background: transparent; border: none; color: #ffd700; font-size: 14px; cursor: pointer; }
@@ -93,9 +93,9 @@
           button.classList.remove('disabled');
           button.disabled = false;
         } else {
-          window.location.href = "index.html"; // Redirige si los pasos no están completos
+          window.location.href = "index.html";
         }
-      }, 1); // Verificación cada 1 milisegundo
+      }, 1);
     }
 
     function generarKey() {
@@ -107,36 +107,27 @@
     }
 
     function generarCadenaAleatoria() {
-      const charsLower = 'abcdefghijklmnopqrstuvwxyz';
-      const charsUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      const charsDigits = '0123456789';
-      const charsSpecial = 'F';
-
+      const minusc = 'abcdefghijklmnopqrstuvwxyz';
+      const mayusc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const nums = '0123456789';
+      const caracteres = minusc + mayusc + nums;
+      
       let result = '';
+      result += 'FFFF';
+      result += obtenerCaracteresAleatorios(minusc, 3);
+      result += obtenerCaracteresAleatorios(mayusc, 5);
+      result += '666';
+      result += obtenerCaracteresAleatorios(caracteres, 65 - result.length);
+      
+      return result;
+    }
 
-      for (let i = 0; i < 3; i++) {
-        result += charsLower[Math.floor(Math.random() * charsLower.length)];
+    function obtenerCaracteresAleatorios(caracteres, cantidad) {
+      let result = '';
+      for (let i = 0; i < cantidad; i++) {
+        const index = Math.floor(Math.random() * caracteres.length);
+        result += caracteres[index];
       }
-
-      for (let i = 0; i < 5; i++) {
-        result += charsUpper[Math.floor(Math.random() * charsUpper.length)];
-      }
-
-      result += '666';  // Número '6' repetido 3 veces
-
-      for (let i = 0; i < 4; i++) {
-        result += charsSpecial;  // Letra 'F' repetida 4 veces
-      }
-
-      const remainingLength = 65 - result.length;
-      const allChars = charsLower + charsUpper + charsDigits;
-
-      for (let i = 0; i < remainingLength; i++) {
-        result += allChars[Math.floor(Math.random() * allChars.length)];
-      }
-
-      result = result.split('').sort(() => Math.random() - 0.5).join('');  // Mezclar los caracteres
-
       return result;
     }
 
@@ -155,7 +146,7 @@
       localStorage.setItem('Paso3', 'false');
       localStorage.removeItem("lastGenerated");
       eliminarKeys();
-      window.location.href = "index.html"; // Redirige al archivo index.html
+      window.location.href = "index.html";
     }
 
     openDB();
