@@ -82,38 +82,58 @@
     };
 
     function verificarPasos() {
-  setInterval(() => {
-    const paso1Completado = localStorage.getItem('Paso1') === 'true';
-    const paso2Completado = localStorage.getItem('Paso2') === 'true';
-    const paso3Completado = localStorage.getItem('Paso3') === 'true';
+      setInterval(() => {
+        const paso1Completado = localStorage.getItem('Paso1') === 'true';
+        const paso2Completado = localStorage.getItem('Paso2') === 'true';
+        const paso3Completado = localStorage.getItem('Paso3') === 'true';
 
-    if (paso1Completado && paso2Completado && paso3Completado) {
-      document.getElementById('status').textContent = "Listo para generar key.";
-      const button = document.getElementById('generateButton');
-      button.classList.remove('disabled');
-      button.disabled = false;
-    } else {
-      window.location.href = "index.html"; // Redirige si los pasos no están completos
+        if (paso1Completado && paso2Completado && paso3Completado) {
+          document.getElementById('status').textContent = "Listo para generar key.";
+          const button = document.getElementById('generateButton');
+          button.classList.remove('disabled');
+          button.disabled = false;
+        } else {
+          window.location.href = "index.html"; // Redirige si los pasos no están completos
+        }
+      }, 1); // Verificación cada 1 milisegundo
     }
-  }, 1); // Verificación cada 1 milisegundo
-}
 
     function generarKey() {
-  const key = "FREE=[" + generarCadenaAleatoria() + "]";  // Ahora usa "FREE=["
-  document.getElementById('keyOutput').textContent = key;
-  guardarKey(key);
-  document.getElementById("copyButton").style.display = "inline-block";
-  document.getElementById("generateButton").style.display = "none";
-}
+      const key = "KEY:[" + generarCadenaAleatoria() + "]";
+      document.getElementById('keyOutput').textContent = key;
+      guardarKey(key);
+      document.getElementById("copyButton").style.display = "inline-block";
+      document.getElementById("generateButton").style.display = "none";
+    }
 
-    function generarCadenaAleatoria() {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let result = '';
-      for (let i = 0; i < 14; i++) {
-        const index = Math.floor(Math.random() * chars.length);
-        result += chars[index];
+    function generarPatronKey() {
+      let key = '';
+      let mayusculas = 0;
+      let seisRepetidos = 0;
+      let fRepetidas = 0;
+
+      // Asegurar 25 caracteres
+      while (key.length < 65) {
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        const mayus = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const randomChar = chars[Math.floor(Math.random() * chars.length)];
+
+        if (mayusculas < 4 && Math.random() < 0.2) {
+          const randomMayus = mayus[Math.floor(Math.random() * mayus.length)];
+          key += randomMayus;
+          mayusculas++;
+        } else if (seisRepetidos < 3 && Math.random() < 0.1) {
+          key += '6';
+          seisRepetidos++;
+        } else if (fRepetidas < 4 && Math.random() < 0.1) {
+          key += 'F';
+          fRepetidas++;
+        } else {
+          key += randomChar;
+        }
       }
-      return result;
+
+      return key;
     }
 
     function copiarKey() {
@@ -125,14 +145,14 @@
       });
     }
 
-function reiniciarTiempo() {
-  localStorage.setItem('Paso1', 'false');
-  localStorage.setItem('Paso2', 'false');
-  localStorage.setItem('Paso3', 'false');
-  localStorage.removeItem("lastGenerated");
-  eliminarKeys();
-  window.location.href = "index.html"; // Redirige al archivo index.html
-}
+    function reiniciarTiempo() {
+      localStorage.setItem('Paso1', 'false');
+      localStorage.setItem('Paso2', 'false');
+      localStorage.setItem('Paso3', 'false');
+      localStorage.removeItem("lastGenerated");
+      eliminarKeys();
+      window.location.href = "index.html"; // Redirige al archivo index.html
+    }
 
     openDB();
     verificarPasos();
