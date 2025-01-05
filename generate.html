@@ -99,12 +99,12 @@
 }
 
     function generarKey() {
-      const key = "KEY:[" + generarCadenaAleatoria() + "]";
-      document.getElementById('keyOutput').textContent = key;
-      guardarKey(key);
-      document.getElementById("copyButton").style.display = "inline-block";
-      document.getElementById("generateButton").style.display = "none";
-    }
+  const key = "KEY:" + generarCadenaAleatoria();  // Siempre con el formato KEY:
+  document.getElementById('keyOutput').textContent = key;
+  guardarKey(key);
+  document.getElementById("copyButton").style.display = "inline-block";
+  document.getElementById("generateButton").style.display = "none";
+}
 
     function generarCadenaAleatoria() {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
