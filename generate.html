@@ -57,16 +57,6 @@
       background: #555;
       cursor: not-allowed;
     }
-    #copyButton {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: transparent;
-      border: none;
-      color: #ffd700;
-      font-size: 14px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -76,7 +66,6 @@
     <div id="timeRemaining" style="font-size: 1.2em; margin-top: 10px;"></div>
     <div class="key-output" id="keyOutput">---</div>
     <button id="generateButton" class="disabled" onclick="generarKey()" style="display:none;" disabled>Generar</button>
-    <button id="copyButton" onclick="copiarKey()" style="display:none;">Copiar</button>
     <button id="resetTimeButton" onclick="reiniciarTiempo()">Reiniciar Tiempo</button>
   </div>
 
@@ -124,11 +113,10 @@
       request.onsuccess = () => {
         if (request.result.length > 0) {
           document.getElementById("keyOutput").textContent = request.result[request.result.length - 1].key;
-          document.getElementById("copyButton").style.display = "inline-block";
+          copiarKey(request.result[request.result.length - 1].key); // Copiar automáticamente
           document.getElementById("generateButton").style.display = "none";
         } else {
           document.getElementById("generateButton").style.display = "inline-block";
-          document.getElementById("copyButton").style.display = "none";
         }
       };
       request.onerror = () => {
@@ -157,7 +145,7 @@
       const key = "KEY:[" + generarCadenaAleatoria() + "]";
       document.getElementById('keyOutput').textContent = key;
       guardarKey(key);
-      document.getElementById("copyButton").style.display = "inline-block";
+      copiarKey(key); // Copiar automáticamente
       document.getElementById("generateButton").style.display = "none";
     }
 
@@ -171,9 +159,8 @@
       return result;
     }
 
-    function copiarKey() {
-      const keyText = document.getElementById('keyOutput').textContent;
-      navigator.clipboard.writeText(keyText).then(() => {
+    function copiarKey(key) {
+      navigator.clipboard.writeText(key).then(() => {
         console.log("Key copiada al portapapeles.");
       }).catch(err => {
         console.error('Error al copiar: ', err);
