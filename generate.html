@@ -154,22 +154,23 @@
     }
 
     function generarKey() {
-      const key = "KEY:[" + generarCadenaAleatoria() + "]";
-      document.getElementById('keyOutput').textContent = key;
-      guardarKey(key);
-      document.getElementById("copyButton").style.display = "inline-block";
-      document.getElementById("generateButton").style.display = "none";
-    }
+  const key = "FREE_" + generarCadenaAleatoria();
+  document.getElementById('keyOutput').textContent = key;
+  guardarKey(key);
+  document.getElementById("copyButton").style.display = "inline-block";
+  document.getElementById("generateButton").style.display = "none";
+}
 
-    function generarCadenaAleatoria() {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#%/+^*!';
-      let result = '';
-      for (let i = 0; i < 64; i++) {
-        const index = Math.floor(Math.random() * chars.length);
-        result += chars[index];
-      }
-      return result;
-    }
+function generarCadenaAleatoria() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#%/+^*!';
+  let result = '';
+  for (let i = 0; i < 64; i++) {
+    const index = Math.floor(Math.random() * chars.length);
+    result += chars[index];
+  }
+  return result;
+}
+
 
     function copiarKey() {
       const keyText = document.getElementById('keyOutput').textContent;
