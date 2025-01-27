@@ -140,6 +140,8 @@
           const paso1Completado = localStorage.getItem('Paso1') === 'true';
           const paso2Completado = localStorage.getItem('Paso2') === 'true';
           const paso3Completado = localStorage.getItem('Paso3') === 'true';
+          const paso4Completado = localStorage.getItem('Paso4') === 'true';
+          const paso5Completado = localStorage.getItem('Paso5') === 'true';
 
           if (paso1Completado && paso2Completado && paso3Completado) {
             document.getElementById('status').textContent = "Listo para generar key.";
@@ -183,6 +185,8 @@
         localStorage.setItem('Paso1', 'false');
         localStorage.setItem('Paso2', 'false');
         localStorage.setItem('Paso3', 'false');
+        localStorage.setItem('Paso4', 'false');
+        localStorage.setItem('Paso5', 'false');
         localStorage.removeItem("lastGenerated");
         eliminarKeys();
         window.location.href = "index.html"; // Redirige al archivo index.html
