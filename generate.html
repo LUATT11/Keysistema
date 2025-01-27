@@ -143,7 +143,7 @@
           const paso4Completado = localStorage.getItem('Paso4') === 'true';
           const paso5Completado = localStorage.getItem('Paso5') === 'true';
 
-          if (paso1Completado && paso2Completado && paso3Completado) {
+          if (paso1Completado && paso2Completado && paso3Completado && paso4Completado && paso5Completado) {
             document.getElementById('status').textContent = "Listo para generar key.";
             const button = document.getElementById('generateButton');
             button.classList.remove('disabled');
