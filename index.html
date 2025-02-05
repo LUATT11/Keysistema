@@ -41,16 +41,14 @@
     }
 
     async function verificarYRedirigir(paso, url) {
-      if (await verificarLinkvertise(url)) {
-        Web(paso, url);
-      } else {
-        alert('No se pudo verificar el enlace. Por favor, intenta de nuevo más tarde.');
-      }
+      const verificado = await verificarLinkvertise(url);
+      localStorage.setItem(`Verificacion${paso}`, verificado ? 'true' : 'false');
+      Web(paso, url);
     }
 
     function Web(paso, url) {
       localStorage.setItem(`Verificacion${paso}`, 'true');
-      window.location.href = url;
+      window.open(url, '_blank');
     }
 
     function verificarEstado() {
@@ -72,7 +70,7 @@
             localStorage.getItem('Paso5') === 'true') {
           window.location.href = "generate.html";
         }
-      }, 1000); // Verifica cada segundo
+      }, 1000);
     }
 
     function reiniciarPasos() {
