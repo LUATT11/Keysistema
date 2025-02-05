@@ -14,95 +14,75 @@
 <body>
 
   <h1>Selecciona un paso para continuar</h1>
-  <button id="btnPaso1" onclick="Web(1, 'https://direct-link.net/1258891/key-paso-1-gracias')">Ir al Paso 1</button>
-  <button id="btnPaso2" onclick="Web(2, 'https://link-hub.net/1258891/pagina-dos-key-2-completa')" disabled>Ir al Paso 2</button>
-  <button id="btnPaso3" onclick="Web(3, 'https://direct-link.net/1258891/bievenido')" disabled>Ir al Paso 3</button>
-    <button id="btnPaso4" onclick="Web(4, 'https://link-center.net/1258891/sistema-4')" disabled>Ir al Paso 4</button>
-  <button id="btnPaso5" onclick="Web(5, 'https://link-center.net/1258891/bivenido-al-ultimo')" disabled>Ir al Paso 5</button>
+  <button id="btnPaso1" onclick="verificarYRedirigir(1, 'https://direct-link.net/1258891/key-paso-1-gracias')">Ir al Paso 1</button>
+  <button id="btnPaso2" onclick="verificarYRedirigir(2, 'https://link-hub.net/1258891/pagina-dos-key-2-completa')" disabled>Ir al Paso 2</button>
+  <button id="btnPaso3" onclick="verificarYRedirigir(3, 'https://direct-link.net/1258891/bievenido')" disabled>Ir al Paso 3</button>
+  <button id="btnPaso4" onclick="verificarYRedirigir(4, 'https://link-center.net/1258891/sistema-4')" disabled>Ir al Paso 4</button>
+  <button id="btnPaso5" onclick="verificarYRedirigir(5, 'https://link-center.net/1258891/bivenido-al-ultimo')" disabled>Ir al Paso 5</button>
 
   <button id="reiniciarBtn" onclick="reiniciarPasos()">Reiniciar Todos los Pasos</button>
 
   <script>
+    const API_TOKEN = '08e9b5006060cf13f6eb2a6044fc804a28f5a548a75e7fb25daf5c37bf531094';
+
+    async function verificarLinkvertise(url) {
+      try {
+        const response = await fetch(`https://publisher.linkvertise.com/api/v1/redirect/link/static/180849/${encodeURIComponent(url)}`, {
+          headers: {
+            'X-Linkvertise-Api-Key': API_TOKEN
+          }
+        });
+        if (!response.ok) throw new Error('Verificación fallida');
+        return true;
+      } catch (error) {
+        console.error('Error en la verificación:', error);
+        return false;
+      }
+    }
+
+    async function verificarYRedirigir(paso, url) {
+      if (await verificarLinkvertise(url)) {
+        Web(paso, url);
+      } else {
+        alert('No se pudo verificar el enlace. Por favor, intenta de nuevo más tarde.');
+      }
+    }
+
     function Web(paso, url) {
-      if (paso === 1) {
-        localStorage.setItem('Verificacion1', 'true');
-      }
-      if (paso === 2) {
-        localStorage.setItem('Verificacion2', 'true');
-      }
-      if (paso === 3) {
-        localStorage.setItem('Verificacion3', 'true');
-      }
-      if (paso === 4) {
-        localStorage.setItem('Verificacion4', 'true');
-      }
-      if (paso === 5) {
-        localStorage.setItem('Verificacion5', 'true');
-      }
+      localStorage.setItem(`Verificacion${paso}`, 'true');
       window.location.href = url;
     }
 
     function verificarEstado() {
       setInterval(() => {
-        if (localStorage.getItem('Paso1') === 'true') {
-          document.getElementById('btnPaso2').disabled = false;
-          document.getElementById('btnPaso1').style.display = 'none';
-        } else {
-          document.getElementById('btnPaso1').style.display = 'inline-block';
+        for (let i = 1; i <= 5; i++) {
+          const btnElement = document.getElementById(`btnPaso${i}`);
+          if (localStorage.getItem(`Paso${i}`) === 'true') {
+            if (i < 5) document.getElementById(`btnPaso${i+1}`).disabled = false;
+            btnElement.style.display = 'none';
+          } else {
+            btnElement.style.display = 'inline-block';
+          }
         }
 
-        if (localStorage.getItem('Paso2') === 'true') {
-          document.getElementById('btnPaso3').disabled = false;
-          document.getElementById('btnPaso2').style.display = 'none';
-        } else {
-          document.getElementById('btnPaso2').style.display = 'inline-block';
+        if (localStorage.getItem('Paso1') === 'true' && 
+            localStorage.getItem('Paso2') === 'true' && 
+            localStorage.getItem('Paso3') === 'true' && 
+            localStorage.getItem('Paso4') === 'true' && 
+            localStorage.getItem('Paso5') === 'true') {
+          window.location.href = "generate.html";
         }
- 
-        if (localStorage.getItem('Paso3') === 'true') {
-          document.getElementById('btnPaso4').disabled = false;
-          document.getElementById('btnPaso3').style.display = 'none';
-        } else {
-          document.getElementById('btnPaso3').style.display = 'inline-block';
-        }
-        
-       if (localStorage.getItem('Paso4') === 'true') {
-          document.getElementById('btnPaso5').disabled = false;
-          document.getElementById('btnPaso4').style.display = 'none';
-        } else {
-          document.getElementById('btnPaso4').style.display = 'inline-block';
-        }        
-        
-        if (localStorage.getItem('Paso5') === 'true') {
-          document.getElementById('btnPaso5').style.display = 'none';
-        }
-
-        if (localStorage.getItem('Paso1') === 'true' && localStorage.getItem('Paso2') === 'true' && localStorage.getItem('Paso3') === 'true' && localStorage.getItem('Paso4') === 'true' && localStorage.getItem('Paso5') === 'true') {
-          window.location.href = "generate.html"; // Redirige a generate.html si todos los pasos están completos
-        }
-      }, 1); // Verifica cada 1 milisegundo
+      }, 1000); // Verifica cada segundo
     }
 
     function reiniciarPasos() {
-      localStorage.removeItem('Verificacion1');
-      localStorage.removeItem('Verificacion2');
-      localStorage.removeItem('Verificacion3');
-      localStorage.removeItem('Verificacion4');
-      localStorage.removeItem('Verificacion5');
-      localStorage.removeItem('Paso1');
-      localStorage.removeItem('Paso2');
-      localStorage.removeItem('Paso3');
-      localStorage.removeItem('Paso4');
-      localStorage.removeItem('Paso5');
-      
-      document.getElementById('btnPaso1').style.display = 'inline-block';
-      document.getElementById('btnPaso2').style.display = 'inline-block';
-      document.getElementById('btnPaso3').style.display = 'inline-block';
-      document.getElementById('btnPaso4').style.display = 'inline-block';
-      document.getElementById('btnPaso5').style.display = 'inline-block';
-      document.getElementById('btnPaso2').disabled = true;
-      document.getElementById('btnPaso3').disabled = true;
-      document.getElementById('btnPaso4').disabled = true;
-      document.getElementById('btnPaso5').disabled = true;
+      for (let i = 1; i <= 5; i++) {
+        localStorage.removeItem(`Verificacion${i}`);
+        localStorage.removeItem(`Paso${i}`);
+        const btnElement = document.getElementById(`btnPaso${i}`);
+        btnElement.style.display = 'inline-block';
+        if (i > 1) btnElement.disabled = true;
+      }
     }
 
     verificarEstado();
@@ -110,3 +90,4 @@
 
 </body>
 </html>
+
